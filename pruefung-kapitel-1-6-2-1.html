@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOS Akademie — امتحان الفصول 1-6 (Deutsch A2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..800&family=Cairo:wght@500;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#221b17; --red:#9c1c1c; --red-deep:#7a1414; --gold:#c8850a; --gold-deep:#a06a06;
+  --paper:#faf6ef; --paper2:#ffffff; --line:#e2d9c8; --muted:#726a5e;
+  --good:#2f6d38; --bad:#a5301f; --shadow:0 1px 2px rgba(34,27,23,.06), 0 10px 26px -14px rgba(34,27,23,.25);
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:'Cairo','Work Sans',sans-serif; line-height:1.7;}
+.de{font-family:'Work Sans',sans-serif; direction:ltr; unicode-bidi:isolate;}
+h1,h2,h3{font-family:'Fraunces','Cairo',serif;}
+::selection{background:var(--gold); color:#fff;}
+
+/* ---------- shared frame ---------- */
+.wrap{max-width:900px; margin:0 auto; padding:24px 20px 60px;}
+.brand-row{display:flex; align-items:center; gap:14px; margin-bottom:18px;}
+.brand-row img{height:46px;}
+.brand-row .names{font-size:12.5px; color:var(--muted);}
+.brand-row .names b{display:block; font-size:15px; color:var(--ink);}
+
+/* ---------- start screen ---------- */
+.cover{
+  background:linear-gradient(135deg,#fffaf1,#fdf0d8);
+  border:2px solid var(--gold-deep);
+  border-radius:16px;
+  padding:36px 32px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.cover .eyebrow{font-size:12px; letter-spacing:2px; color:var(--gold-deep); font-weight:800; text-transform:uppercase;}
+.cover h1{font-size:27px; margin:10px 0 6px;}
+.cover .sub{color:var(--muted); font-size:14px; max-width:60ch; margin:0 auto 20px;}
+.badges{display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:24px;}
+.badge{background:var(--ink); color:#fff; font-size:12.5px; padding:6px 14px; border-radius:999px;}
+.badge.gold{background:var(--gold-deep);}
+.instructions{
+  text-align:right; background:var(--paper2); border:1px solid var(--line); border-radius:12px;
+  padding:18px 20px; margin-bottom:22px; font-size:13.5px; max-width:640px; margin-inline:auto;
+}
+.instructions h3{font-size:14.5px; margin:0 0 10px;}
+.instructions ul{margin:0; padding-inline-start:20px;}
+.instructions li{margin-bottom:6px;}
+.name-field{max-width:340px; margin:0 auto 18px; text-align:right;}
+.name-field label{display:block; font-size:12.5px; color:var(--muted); margin-bottom:6px;}
+.name-field input{
+  width:100%; padding:11px 14px; border:1.5px solid var(--line); border-radius:9px;
+  font-family:inherit; font-size:14px;
+}
+.start-btn{
+  background:var(--red); color:#fff; border:none; border-radius:11px; padding:13px 30px;
+  font-size:15px; font-weight:800; cursor:pointer;
+}
+.start-btn:hover{background:var(--red-deep);}
+.start-btn:disabled{background:var(--line); color:var(--muted); cursor:not-allowed;}
+
+/* ---------- exam top bar ---------- */
+.exam-topbar{
+  position:sticky; top:0; z-index:20;
+  background:rgba(250,246,239,.95); backdrop-filter:blur(6px);
+  border:1px solid var(--line); border-radius:14px;
+  padding:12px 16px; margin-bottom:20px;
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+}
+.exam-topbar .who{font-size:12.5px; color:var(--muted);}
+.exam-topbar .who b{color:var(--ink);}
+.timer{
+  font-family:'Work Sans',monospace; font-size:20px; font-weight:800; color:var(--ink);
+  background:#fff; border:2px solid var(--gold-deep); border-radius:10px; padding:6px 16px;
+  direction:ltr;
+}
+.timer.warn{color:#fff; background:var(--bad); border-color:var(--bad); animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.65;}}
+.finish-btn{background:var(--ink); color:#fff; border:none; border-radius:9px; padding:9px 16px; font-size:12.5px; font-weight:700; cursor:pointer;}
+.finish-btn:hover{background:#000;}
+
+/* ---------- section tabs ---------- */
+.tabs{display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;}
+.tab-btn{
+  flex:1; min-width:110px; background:var(--paper2); border:1.5px solid var(--line); color:var(--muted);
+  border-radius:10px; padding:10px 8px; font-size:13px; font-weight:700; cursor:pointer; text-align:center;
+}
+.tab-btn.active{background:var(--red); color:#fff; border-color:var(--red);}
+.exam-section{display:none;}
+.exam-section.active{display:block; animation:fade .3s ease;}
+@keyframes fade{from{opacity:0; transform:translateY(6px);}to{opacity:1; transform:none;}}
+
+/* ---------- cards ---------- */
+.card{background:var(--paper2); border:1px solid var(--line); border-radius:14px; padding:18px; box-shadow:var(--shadow); margin-bottom:16px;}
+.section-title{font-size:19px; margin:0 0 4px;}
+.section-lead{color:var(--muted); font-size:13.5px; margin:0 0 18px;}
+.sentence-row{display:flex; align-items:flex-start; gap:10px; padding:7px 4px; border-radius:8px;}
+.sentence-row .idx{font-size:11px; color:var(--muted); width:18px; padding-top:3px;}
+.sentence-row .txt{flex:1; font-size:15px;}
+.spk{
+  border:none; background:var(--ink); color:#fff; width:30px; height:30px; border-radius:9px;
+  cursor:pointer; font-size:13px; flex:0 0 auto;
+}
+.spk:hover{background:var(--red);}
+.spk.playing{background:var(--gold-deep);}
+
+.q-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:14px;}
+.q-num{font-size:11px; color:var(--muted); font-weight:700; margin-bottom:6px;}
+.q-prompt{font-size:14.5px; font-weight:600; margin-bottom:12px;}
+.q-options{display:flex; flex-direction:column; gap:8px;}
+.q-opt{border:1.5px solid var(--line); border-radius:9px; padding:9px 12px; cursor:pointer; font-size:14px; background:#fff;}
+.q-opt:hover{border-color:var(--gold-deep);}
+.q-opt.selected{border-color:var(--red); background:#fbe9e4;}
+.q-opt.correct{border-color:var(--good); background:#e7f2e8;}
+.q-opt.wrong{border-color:var(--bad); background:#fbe2de;}
+.q-fill input, .q-write textarea{
+  width:100%; padding:9px 12px; border:1.5px solid var(--line); border-radius:9px; font-family:inherit; font-size:14px;
+}
+.q-fill input{direction:ltr; text-align:left;}
+.q-write textarea{direction:ltr; resize:vertical;}
+.hint-box{font-size:12.5px; color:var(--gold-deep); background:#fff7e8; border:1px solid #eddba0; border-radius:8px; padding:8px 10px; margin-bottom:10px;}
+
+.recorder-box{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px; margin-top:8px;}
+.rec-controls{display:flex; gap:8px; flex-wrap:wrap;}
+.rec-status{font-size:12px; color:var(--muted); margin-top:8px; min-height:16px;}
+.rec-status.recording{color:var(--red); font-weight:700;}
+.rec-audio{display:none; margin-top:8px; width:100%;}
+.rec-download{display:none; text-decoration:none; margin-top:8px;}
+.btn{border:none; cursor:pointer; border-radius:9px; padding:8px 14px; font-family:inherit; font-weight:700; font-size:12.5px;}
+.btn-red{background:var(--red); color:#fff;} .btn-red:hover{background:var(--red-deep);}
+.btn-gold{background:var(--gold-deep); color:#fff;} .btn-gold:hover{background:#8a5a05;}
+.btn-ghost{background:transparent; border:1.4px solid var(--line); color:var(--ink);}
+.btn:disabled{opacity:.45; cursor:not-allowed;}
+
+.q-progress{display:flex; align-items:center; gap:10px; margin-bottom:16px; font-size:12.5px; color:var(--muted);}
+.q-progress .bar{flex:1; height:6px; background:var(--line); border-radius:99px; overflow:hidden;}
+.q-progress .fill{height:100%; background:linear-gradient(90deg,var(--red),var(--gold)); width:0%; transition:width .3s;}
+
+/* ---------- results ---------- */
+.results-hero{background:linear-gradient(120deg,var(--ink),#3a2a22); color:#fff; border-radius:16px; padding:30px 26px; text-align:center; margin-bottom:20px;}
+.results-hero .big{font-size:40px; font-weight:800; font-family:'Fraunces',serif;}
+.results-hero p{color:#e4d8c8; font-size:13.5px;}
+.results-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:20px;}
+.results-grid .stat{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px; text-align:center;}
+.results-grid .stat .num{font-size:22px; font-weight:800; color:var(--red-deep);}
+.results-grid .stat .lbl{font-size:11.5px; color:var(--muted);}
+.note-box{background:#fff7e8; border:1px solid #eddba0; border-radius:10px; padding:14px 16px; font-size:13px; margin-bottom:16px;}
+
+@media print{
+  .exam-topbar, .tabs, .finish-btn{display:none !important;}
+}
+
+/* ---------- focus-lock / anti-navigation violation modal ---------- */
+.violation-overlay{
+  position:fixed; inset:0; z-index:100;
+  background:rgba(20,14,10,.72);
+  display:none; align-items:center; justify-content:center; padding:20px;
+}
+.violation-overlay.show{display:flex;}
+.violation-card{
+  background:#fff; border:2px solid var(--bad); border-radius:16px;
+  max-width:440px; width:100%; padding:26px 24px; text-align:center;
+  box-shadow:0 20px 50px -14px rgba(0,0,0,.5);
+}
+.violation-card .vicon{font-size:40px; margin-bottom:10px;}
+.violation-card h3{margin:0 0 10px; font-size:18px; color:var(--bad);}
+.violation-card p{font-size:13.5px; color:var(--muted); margin:0 0 6px;}
+.violation-card .vcount{
+  display:inline-block; margin:12px 0; padding:6px 16px; border-radius:999px;
+  background:#fbe2de; color:var(--bad); font-weight:800; font-size:13px;
+}
+.violation-card .vfinal{
+  background:#fbe2de; border:1px solid var(--bad); border-radius:10px; padding:10px 12px;
+  font-size:13px; color:var(--bad); font-weight:700; margin-top:10px;
+}
+.violation-card button{
+  margin-top:16px; background:var(--ink); color:#fff; border:none; border-radius:9px;
+  padding:10px 22px; font-size:13.5px; font-weight:700; cursor:pointer;
+}
+.violation-card button:hover{background:#000;}
+.lock-banner{
+  position:fixed; top:0; left:0; right:0; z-index:99;
+  background:var(--bad); color:#fff; text-align:center; padding:6px; font-size:12px; font-weight:700;
+  display:none;
+}
+.lock-banner.show{display:block;}
+
+/* ---------- password gate ---------- */
+.pw-field{max-width:300px; margin:0 auto 14px; text-align:right;}
+.pw-field label{display:block; font-size:12.5px; color:var(--muted); margin-bottom:6px;}
+.pw-field input{
+  width:100%; padding:11px 14px; border:1.5px solid var(--line); border-radius:9px;
+  font-family:inherit; font-size:14px; direction:ltr; text-align:center; letter-spacing:1px;
+}
+.pw-error{color:var(--bad); font-size:12.5px; margin:-6px auto 14px; max-width:300px; display:none; font-weight:700;}
+.pw-error.show{display:block;}
+.name-hint{font-size:11.5px; color:var(--muted); margin-top:6px; text-align:right;}
+
+/* ---------- anti screen-capture hardening ---------- */
+#examScreen, #resultsScreen{ -webkit-user-select:none; user-select:none; }
+#examScreen input, #examScreen textarea,
+#resultsScreen input, #resultsScreen textarea{ -webkit-user-select:text; user-select:text; }
+#examScreen img, #resultsScreen img{ -webkit-user-drag:none; user-drag:none; pointer-events:none; }
+
+#examWatermark{
+  position:fixed; inset:0; z-index:50; pointer-events:none;
+  display:none; overflow:hidden;
+}
+#examWatermark.show{display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:160px;}
+.wm-item{
+  transform:rotate(-28deg); color:rgba(34,27,23,.09);
+  font-size:12px; font-weight:800; white-space:nowrap; align-self:center; justify-self:center; direction:ltr;
+}
+@media (max-width:600px){
+  #examWatermark.show{grid-template-columns:repeat(2,1fr); grid-auto-rows:130px;}
+  .wm-item{font-size:10.5px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand-row">
+    <img src="data:image/webp;base64,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" alt="DOS Akademie">
+    <div class="names"><b>أكاديمية DOS لتعليم الألمانية</b>Drei Online Spezialisten — Lernen. Verstehen. Umsetzen.</div>
+  </div>
+
+  <!-- ================= START SCREEN ================= -->
+  <!-- ================= PASSWORD GATE ================= -->
+  <div class="cover" id="passwordGate">
+    <div class="eyebrow">DOS AKADEMIE · دخول محمي</div>
+    <h1>كلمة سر الامتحان</h1>
+    <p class="sub">هذا الامتحان محمي بكلمة سر. الرجاء إدخال كلمة السر التي زوّدك بها المعلّم/ة للمتابعة.</p>
+    <div class="pw-field">
+      <label>كلمة السر</label>
+      <input type="password" id="examPassword" placeholder="••••••••" autocomplete="off">
+    </div>
+    <div class="pw-error" id="pwError">كلمة السر غير صحيحة. حاول مرة أخرى.</div>
+    <button class="start-btn" id="pwSubmitBtn">🔓 دخول الامتحان</button>
+  </div>
+
+  <!-- ================= START SCREEN ================= -->
+  <div class="cover" id="startScreen" style="display:none;">
+    <div class="eyebrow">DOS AKADEMIE · PRÜFUNG</div>
+    <h1>الامتحان الشامل الأول</h1>
+    <p class="sub">يغطي هذا الامتحان محتوى الفصول من Kapitel 1 إلى Kapitel 6 من مستوى A2، ويقيس المهارات اللغوية الأربع: القراءة، الاستماع، الكتابة، والمحادثة.</p>
+    <div class="badges">
+      <span class="badge gold">⏱️ المدة: 90 دقيقة</span>
+      <span class="badge">📖 Lesen · 🎧 Hören · ✍️ Schreiben · 🎙️ Sprechen</span>
+      <span class="badge">Kapitel 1–6</span>
+      <span class="badge">25 سؤالاً في كل مهارة</span>
+    </div>
+    <div class="instructions">
+      <h3>تعليمات الامتحان</h3>
+      <ul>
+        <li>يبدأ العدّاد الزمني (90 دقيقة) فور الضغط على زر «ابدأ الامتحان»، ولا يمكن إيقافه.</li>
+        <li>يحتوي كل قسم من المهارات الأربع على 25 سؤالاً/تمريناً.</li>
+        <li>قسم Lesen يتضمّن نصّين كاملين للقراءة (13 سؤالاً على النص الأول، و12 سؤالاً على النص الثاني) — بدون أي دعم صوتي، فهو اختبار قراءة بحتة.</li>
+        <li>قسم Hören يعتمد بالكامل على النطق الصوتي الآلي عالي الوضوح لكل جملة — اضغط 🔊 للاستماع بقدر ما تحتاج.</li>
+        <li>قسما Lesen وHören يُصحَّحان تلقائياً فور الضغط على «إنهاء الامتحان».</li>
+        <li>قسما Schreiben وSprechen يُحفَظان لمراجعة المعلّم يدوياً (نصوص مكتوبة وتسجيلات صوتية).</li>
+        <li>تأكّد من السماح للمتصفح باستخدام الميكروفون قبل قسم Sprechen.</li>
+        <li>عند انتهاء الوقت، يُقفَل الامتحان تلقائياً وتُحتسب النتيجة بناءً على الإجابات المُدخَلة حتى تلك اللحظة.</li>
+        <li>🔒 لا يُسمح بأخذ لقطات شاشة أو مشاركة/تسجيل الشاشة أثناء الامتحان؛ الصفحة تحمل علامة مائية باسمك، وأي محاولة رصد تُحتسب كخرق لقواعد وضع الامتحان المقفل.</li>
+      </ul>
+    </div>
+    <div class="name-field">
+      <label>اسم المستخدم (الاسم الثلاثي بالإنجليزية)</label>
+      <input type="text" id="studentName" placeholder="Example: Ahmad Mohammed Ali" autocomplete="off" dir="ltr" style="text-align:left;">
+      <div class="name-hint">يُكتب الاسم الثلاثي بأحرف إنجليزية فقط، مثال: Sara Ali Hassan</div>
+    </div>
+    <button class="start-btn" id="startBtn">🚀 ابدأ الامتحان</button>
+  </div>
+
+  <!-- ================= EXAM SCREEN ================= -->
+  <div id="examScreen" style="display:none;">
+    <div class="exam-topbar">
+      <div class="who">الطالب/ة: <b id="topName">—</b> · Kapitel 1–6</div>
+      <div class="timer" id="timerDisplay">90:00</div>
+      <button class="finish-btn" id="finishBtn">✅ إنهاء الامتحان وعرض النتيجة</button>
+    </div>
+
+    <div class="tabs" id="examTabs"></div>
+
+    <section class="exam-section" id="sec-lesen">
+      <h2 class="section-title">📖 Lesen — القراءة</h2>
+      <p class="section-lead">اقرأ النصّين التاليَين بعناية ثم أجب عن الأسئلة (25 سؤالاً إجمالاً). لا يوجد دعم صوتي في هذا القسم.</p>
+      <div id="lesenContent"></div>
+    </section>
+
+    <section class="exam-section" id="sec-hoeren">
+      <h2 class="section-title">🎧 Hören — الاستماع</h2>
+      <p class="section-lead">اضغط 🔊 لسماع كل جملة بصوت ألماني واضح وعالي الجودة (يمكن الاستماع أكثر من مرة) ثم أجب دون قراءة نص مكتوب (25 سؤالاً).</p>
+      <div class="q-progress"><span id="hoerenProgLabel">0 / 25</span><div class="bar"><div class="fill" id="hoerenProgFill"></div></div></div>
+      <div id="hoerenQuizContainer"></div>
+    </section>
+
+    <section class="exam-section" id="sec-schreiben">
+      <h2 class="section-title">✍️ Schreiben — الكتابة</h2>
+      <p class="section-lead">اكتب إجاباتك بالألمانية في المساحات أدناه (25 تمريناً). ستُحفَظ إجاباتك للمراجعة.</p>
+      <div id="schreibenContainer"></div>
+    </section>
+
+    <section class="exam-section" id="sec-sprechen">
+      <h2 class="section-title">🎙️ Sprechen — المحادثة</h2>
+      <p class="section-lead">سجّل إجابتك الصوتية لكل سؤال (25 سؤالاً)، ثم استمع إليها أو حمّلها.</p>
+      <div id="sprechenContainer"></div>
+    </section>
+  </div>
+
+  <!-- ================= RESULTS SCREEN ================= -->
+  <div id="resultsScreen" style="display:none;">
+    <div class="results-hero">
+      <div class="big" id="resultBigScore">0 / 12</div>
+      <p id="resultSummaryText">نتيجة قسمَي Lesen وHören</p>
+    </div>
+    <div class="results-grid">
+      <div class="stat"><div class="num" id="statLesen">0/6</div><div class="lbl">Lesen</div></div>
+      <div class="stat"><div class="num" id="statHoeren">0/6</div><div class="lbl">Hören</div></div>
+      <div class="stat"><div class="num" id="statTime">00:00</div><div class="lbl">الوقت المستغرق</div></div>
+      <div class="stat"><div class="num" id="statPct">0%</div><div class="lbl">النسبة الإجمالية</div></div>
+    </div>
+    <div class="note-box">📝 إجابات قسم <b>Schreiben</b> وتسجيلات قسم <b>Sprechen</b> غير مُصحَّحة آلياً؛ استخدم الأزرار أدناه لتصديرها ومراجعتها يدوياً كمعلّم.</div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
+      <button class="btn btn-gold" id="exportWritingBtn">⬇️ تصدير إجابات الكتابة (نص)</button>
+      <button class="btn btn-ghost" id="printResultsBtn">🖨️ طباعة النتيجة</button>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;font-size:15px;">تفاصيل الإجابات (Lesen &amp; Hören)</h3>
+      <div id="detailedReview"></div>
+    </div>
+  </div>
+
+  <!-- ================= FOCUS-LOCK: violation warning modal ================= -->
+  <div class="lock-banner" id="lockBanner">🔒 وضع الامتحان المقفل مفعّل — الرجاء عدم مغادرة هذه الصفحة</div>
+  <div class="violation-overlay" id="violationOverlay">
+    <div class="violation-card">
+      <div class="vicon">⚠️</div>
+      <h3 id="violationTitle">تحذير: مغادرة صفحة الامتحان</h3>
+      <p id="violationBody">لقد غادرت صفحة الامتحان لمدة <b id="violationSeconds">0</b> ثانية.</p>
+      <div class="vcount" id="violationCountLabel">تحذير 1 من 3</div>
+      <p style="font-size:12.5px;">الرجاء البقاء داخل صفحة الامتحان حتى الانتهاء منه. مغادرة الصفحة 3 مرات تؤدي إلى إنهاء الامتحان تلقائياً واحتساب نتيجتك الحالية.</p>
+      <div class="vfinal" id="violationFinalNote" style="display:none;">🚫 هذا هو التحذير الأخير المسموح به.</div>
+      <button id="violationCloseBtn">فهمت، متابعة الامتحان</button>
+    </div>
+  </div>
+
+  <div id="examWatermark"></div>
+
+</div>
+
+<script>
+/* =========================================================
+   EXAM CONTENT — Kapitel 1–6
+   ========================================================= */
+const EXAM_PASSWORD = "2026_DOS_A2";
+document.getElementById('pwSubmitBtn').onclick = ()=>{
+  const entered = document.getElementById('examPassword').value;
+  if(entered === EXAM_PASSWORD){
+    document.getElementById('passwordGate').style.display = 'none';
+    document.getElementById('startScreen').style.display = 'block';
+    document.getElementById('pwError').classList.remove('show');
+  } else {
+    document.getElementById('pwError').classList.add('show');
+  }
+};
+document.getElementById('examPassword').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('pwSubmitBtn').click(); }
+});
+
+const EXAM_DURATION_MIN = 90;
+
+const lesenTextA = [
+ "Die Netzwerk-WG in Berlin besteht aus vier Mitbewohnern: Lisa, Tom, Sofia und Kenan.",
+ "Toms Zimmer ist klein, aber sehr gemütlich, und Sofias Zimmer liegt direkt neben der Küche.",
+ "Am Anfang haben sie Sofias Geburtstag gefeiert und sind zusammen in einem Restaurant essen gegangen.",
+ "Der Kellner hat ihnen die Speisekarte gebracht, und alle haben etwas Leckeres bestellt.",
+ "Sofia hat Nudeln bestellt, weil sie kein Fleisch isst.",
+ "Nach dem Essen hat Tom die Rechnung bezahlt, weil es sein Vorschlag war.",
+ "Ein paar Wochen später hat Kenan ein Schulprojekt über seine Kindheit vorbereitet.",
+ "Er musste damals auf eine Gesamtschule gehen und einmal eine Prüfung wiederholen.",
+ "Zum Glück ist er nicht durchgefallen, und heute lacht er darüber.",
+ "An einem ruhigen Wochenende haben sie zusammen einen Film angeschaut.",
+ "Sofia findet, dass Krimis viel spannender sind als Komödien.",
+ "Tom meint dagegen, dass der neue Film sogar besser ist als das Buch.",
+ "Am Ende des Abends waren sich alle einig, dass es ein perfekter Tag war.",
+ "Solche gemeinsamen Momente machen das Leben in der WG jeden Tag ein bisschen schöner."
+];
+
+const lesenQuizA = [
+ {type:"mc", prompt:"Wie viele Mitbewohner hat die WG?", options:["drei","vier","fünf"], answer:"vier", explain:"'...vier Mitbewohnern: Lisa, Tom, Sofia und Kenan.'"},
+ {type:"fill", prompt:"Wessen Zimmer liegt neben der Küche? (ein Wort)", answer:"Sofias", explain:"'Sofias Zimmer liegt direkt neben der Küche.'"},
+ {type:"mc", prompt:"Was haben sie am Anfang gefeiert?", options:["Sofias Geburtstag","Toms neuen Job","Kenans Prüfung"], answer:"Sofias Geburtstag", explain:"'...haben sie Sofias Geburtstag gefeiert...'"},
+ {type:"fill", prompt:"Wer hat die Speisekarte gebracht? (ein Wort)", answer:"Kellner", explain:"'Der Kellner hat ihnen die Speisekarte gebracht...'"},
+ {type:"mc", prompt:"Warum hat Sofia Nudeln bestellt?", options:["weil sie kein Fleisch isst","weil sie kein Geld hat","weil sie es mag"], answer:"weil sie kein Fleisch isst", explain:"'...weil sie kein Fleisch isst.'"},
+ {type:"fill", prompt:"Wer hat die Rechnung bezahlt? (ein Wort)", answer:"Tom", explain:"'...hat Tom die Rechnung bezahlt...'"},
+ {type:"mc", prompt:"Worüber hat Kenan sein Schulprojekt gemacht?", options:["über seine Kindheit","über seine Arbeit","über seine Reise"], answer:"über seine Kindheit", explain:"'...ein Schulprojekt über seine Kindheit vorbereitet.'"},
+ {type:"fill", prompt:"Auf welche Schule musste Kenan gehen? (ein Wort)", answer:"Gesamtschule", explain:"'Er musste...auf eine Gesamtschule gehen...'"},
+ {type:"mc", prompt:"Ist Kenan durch die Prüfung gefallen?", options:["Ja","Nein"], answer:"Nein", explain:"'Zum Glück ist er nicht durchgefallen...'"},
+ {type:"mc", prompt:"Was haben sie am Wochenende gemacht?", options:["einen Film angeschaut","ein Buch gelesen","Sport gemacht"], answer:"einen Film angeschaut", explain:"'...haben sie zusammen einen Film angeschaut.'"},
+ {type:"mc", prompt:"Was findet Sofia spannender?", options:["Krimis","Komödien","Dokumentarfilme"], answer:"Krimis", explain:"'Sofia findet, dass Krimis viel spannender sind...'"},
+ {type:"fill", prompt:"Was ist laut Tom besser als das Buch? (ein Wort)", answer:"Film", explain:"'...der neue Film sogar besser ist als das Buch.'"},
+ {type:"mc", prompt:"Wie fühlten sich alle am Ende des Abends?", options:["einig, dass es ein perfekter Tag war","gelangweilt","müde und traurig"], answer:"einig, dass es ein perfekter Tag war", explain:"'...waren sich alle einig, dass es ein perfekter Tag war.'"}
+];
+
+const lesenTextB = [
+ "Tom hatte eines Morgens schlechte Laune, weil sein Computer kaputt war.",
+ "Am Abend hat Sofia aber eine wunderbare Nachricht bekommen.",
+ "Sie hat ihre wichtige Prüfung bestanden, und alle haben herzlich gratuliert.",
+ "Wenn jemand gute Nachrichten bekommt, will man sie sofort mit allen teilen.",
+ "Ihr Freund Max hat außerdem eine neue Stelle in einem gemütlichen Café gefunden.",
+ "Die freundliche Chefin hat ihn am Ende zum Probearbeiten eingeladen.",
+ "Für seinen neuen Job musste Max zuerst ein Bankkonto eröffnen.",
+ "Ohne Anmeldung bei der Behörde darf man in Deutschland offiziell nicht arbeiten.",
+ "Kenan ist mit dem Zug nach München gefahren, um einen Schnupperkurs als Koch zu machen.",
+ "Ein erfahrener Koch hat den Kurs mit viel Geduld geleitet.",
+ "Dort hat Kenan gemerkt, dass Kochen wirklich sein Traumberuf werden könnte.",
+ "Zurück in der WG hat er sein erstes Telefongespräch komplett auf Deutsch geführt.",
+ "Am Telefon musste er seinen Nachnamen sogar buchstabieren.",
+ "Am Ende waren alle stolz auf die Fortschritte, die sie in dieser Zeit gemacht hatten."
+];
+
+const lesenQuizB = [
+ {type:"mc", prompt:"Warum hatte Tom schlechte Laune?", options:["Sein Computer war kaputt.","Er war krank.","Er hatte Hunger."], answer:"Sein Computer war kaputt.", explain:"'...weil sein Computer kaputt war.'"},
+ {type:"fill", prompt:"Was hat Sofia bestanden? (ein Wort)", answer:"Prüfung", explain:"'Sie hat ihre wichtige Prüfung bestanden...'"},
+ {type:"mc", prompt:"Wo hat Max eine neue Stelle gefunden?", options:["in einem Café","in einer Schule","in einer Bank"], answer:"in einem Café", explain:"'...eine neue Stelle in einem gemütlichen Café gefunden.'"},
+ {type:"fill", prompt:"Wozu hat die Chefin Max eingeladen? (ein Wort)", answer:"Probearbeiten", explain:"'...hat ihn am Ende zum Probearbeiten eingeladen.'"},
+ {type:"mc", prompt:"Was musste Max zuerst eröffnen?", options:["ein Bankkonto","ein Geschäft","eine Schule"], answer:"ein Bankkonto", explain:"'...musste Max zuerst ein Bankkonto eröffnen.'"},
+ {type:"mc", prompt:"Was braucht man laut Text, um offiziell zu arbeiten?", options:["eine Anmeldung bei der Behörde","ein Auto","einen Hund"], answer:"eine Anmeldung bei der Behörde", explain:"'Ohne Anmeldung bei der Behörde darf man...nicht arbeiten.'"},
+ {type:"fill", prompt:"Wohin ist Kenan mit dem Zug gefahren? (ein Wort)", answer:"München", explain:"'Kenan ist mit dem Zug nach München gefahren...'"},
+ {type:"mc", prompt:"Wer hat den Kochkurs geleitet?", options:["ein erfahrener Koch","die Chefin","Max"], answer:"ein erfahrener Koch", explain:"'Ein erfahrener Koch hat den Kurs...geleitet.'"},
+ {type:"fill", prompt:"Was könnte Kenans Traumberuf werden? (ein Wort)", answer:"Koch", explain:"'...dass Kochen wirklich sein Traumberuf werden könnte.'"},
+ {type:"mc", prompt:"In welcher Sprache hat Kenan telefoniert?", options:["Deutsch","Englisch","Türkisch"], answer:"Deutsch", explain:"'...sein erstes Telefongespräch komplett auf Deutsch geführt.'"},
+ {type:"fill", prompt:"Was musste Kenan am Telefon buchstabieren? (ein Wort)", answer:"Nachnamen", explain:"'Am Telefon musste er seinen Nachnamen sogar buchstabieren.'"},
+ {type:"mc", prompt:"Wie fühlten sich alle am Ende?", options:["stolz auf ihre Fortschritte","enttäuscht","gelangweilt"], answer:"stolz auf ihre Fortschritte", explain:"'...waren alle stolz auf die Fortschritte...'"}
+];
+
+const hoerenQuiz = [
+ {sentence:"Wir feiern, weil Sofia Geburtstag hat.", type:"mc", prompt:"Warum feiern sie?", options:["Geburtstag","Hochzeit","Weihnachten"], answer:"Geburtstag", explain:"'...weil Sofia Geburtstag hat.'"},
+ {sentence:"Ich habe Nudeln bestellt, weil ich kein Fleisch esse.", type:"mc", prompt:"Warum bestellt die Person Nudeln?", options:["Sie mag kein Fleisch.","Sie hat kein Geld.","Sie ist nicht hungrig."], answer:"Sie mag kein Fleisch.", explain:"'...weil ich kein Fleisch esse.'"},
+ {sentence:"Toms Zimmer ist klein, aber sehr gemütlich.", type:"fill", prompt:"Wessen Zimmer ist klein? (ein Wort)", answer:"Toms", explain:"Genitiv: Toms Zimmer."},
+ {sentence:"Der Kellner hat uns die Speisekarte gebracht.", type:"fill", prompt:"Wer hat die Speisekarte gebracht? (ein Wort)", answer:"Kellner", explain:"'Der Kellner hat uns die Speisekarte gebracht.'"},
+ {sentence:"Musstet ihr damals auch Uniformen tragen?", type:"mc", prompt:"Welche Zeitform ist 'musstet'?", options:["Präteritum","Perfekt","Präsens"], answer:"Präteritum", explain:"Modalverb im Präteritum: musstet."},
+ {sentence:"Er spricht mit seinem Lehrer.", type:"mc", prompt:"In welcher Kasus-Form steht 'seinem'?", options:["Dativ","Nominativ","Akkusativ"], answer:"Dativ", explain:"mit + Dativ: mit seinem Lehrer."},
+ {sentence:"Kenan musste einmal eine Prüfung wiederholen.", type:"mc", prompt:"Was musste Kenan tun?", options:["eine Prüfung wiederholen","eine Schule wechseln","ein Fach lernen"], answer:"eine Prüfung wiederholen", explain:"'Kenan musste einmal eine Prüfung wiederholen.'"},
+ {sentence:"Zum Glück ist er nicht durchgefallen.", type:"mc", prompt:"Ist die Person durchgefallen?", options:["Ja","Nein"], answer:"Nein", explain:"'Zum Glück ist er nicht durchgefallen.'"},
+ {sentence:"Ich finde, dass Komödien immer gute Laune machen.", type:"fill", prompt:"Welches Wort leitet den Nebensatz ein? (ein Wort)", answer:"dass", explain:"Nebensatz mit 'dass'."},
+ {sentence:"Ist er genauso gut wie das Buch?", type:"mc", prompt:"Welcher Vergleich wird hier benutzt?", options:["Gleichheit (wie)","Ungleichheit (als)","kein Vergleich"], answer:"Gleichheit (wie)", explain:"genauso...wie = Gleichheit."},
+ {sentence:"Der Film ist sogar besser als das Buch.", type:"fill", prompt:"Welches Wort zeigt die Ungleichheit? (ein Wort)", answer:"als", explain:"Komparativ + als = Ungleichheit."},
+ {sentence:"Gibt es den Film auch mit Untertiteln?", type:"mc", prompt:"Wonach fragt die Person?", options:["nach Untertiteln","nach dem Preis","nach der Uhrzeit"], answer:"nach Untertiteln", explain:"'Gibt es den Film auch mit Untertiteln?'"},
+ {sentence:"Wenn es stressig wird, geht Sofia gern spazieren.", type:"mc", prompt:"Was macht Sofia bei Stress?", options:["spazieren gehen","schlafen","kochen"], answer:"spazieren gehen", explain:"'...geht Sofia gern spazieren.'"},
+ {sentence:"Ich freue mich sehr über die Nachricht.", type:"fill", prompt:"Welche Präposition folgt hier auf 'sich freuen'? (ein Wort)", answer:"über", explain:"sich freuen über + Akkusativ."},
+ {sentence:"Er hat sich für seine schlechte Laune entschuldigt.", type:"mc", prompt:"Wofür entschuldigt er sich?", options:["für seine schlechte Laune","für das Essen","für den Lärm"], answer:"für seine schlechte Laune", explain:"'...hat sich für seine schlechte Laune entschuldigt.'"},
+ {sentence:"Herzlichen Glückwunsch!", type:"mc", prompt:"Wann sagt man das?", options:["bei einem Erfolg","bei einem Fehler","beim Abschied"], answer:"bei einem Erfolg", explain:"Glückwunsch = Gratulation zu einem Erfolg."},
+ {sentence:"Könnten Sie mir kurz Ihre Erfahrung beschreiben?", type:"mc", prompt:"Welche Verbform ist 'könnten'?", options:["Konjunktiv II","Perfekt","Imperativ"], answer:"Konjunktiv II", explain:"könnten = höfliche Konjunktiv-II-Form."},
+ {sentence:"Ohne Anmeldung darf man nicht arbeiten.", type:"fill", prompt:"Welche Präposition steht hier mit Akkusativ? (ein Wort)", answer:"Ohne", explain:"ohne + Akkusativ."},
+ {sentence:"Mit einem Kaffee in der Hand macht er sich auf den Weg.", type:"fill", prompt:"Welche Präposition steht hier mit Dativ? (ein Wort)", answer:"Mit", explain:"mit + Dativ."},
+ {sentence:"Die freundliche Chefin begrüßt ihn.", type:"mc", prompt:"Welche Endung hat 'freundlich' hier?", options:["-e","-en","-es"], answer:"-e", explain:"Nach 'die' (feminin, Nominativ): Adjektiv + e."},
+ {sentence:"Ich möchte vielleicht Koch werden.", type:"mc", prompt:"Was bedeutet 'werden' hier?", options:["etwas werden (zu etwas)","etwas kaufen","etwas verlieren"], answer:"etwas werden (zu etwas)", explain:"werden = einen Beruf/Zustand erreichen."},
+ {sentence:"Ein erfahrener Koch leitet den Kurs.", type:"fill", prompt:"Welche Endung hat 'erfahren' hier? (nur die Endung, z. B. -er)", answer:"-er", explain:"Nach 'ein' (maskulin, Nominativ): Adjektiv + er."},
+ {sentence:"Könnten Sie Ihren Nachnamen bitte buchstabieren?", type:"mc", prompt:"Worum bittet man?", options:["um das Buchstabieren des Namens","um eine Telefonnummer","um eine Adresse"], answer:"um das Buchstabieren des Namens", explain:"'...Ihren Nachnamen bitte buchstabieren?'"},
+ {sentence:"Der Zug fährt um neun Uhr fünfzehn ab.", type:"fill", prompt:"Um wie viel Uhr fährt der Zug ab? (ein Wort: neun Uhr ___)", answer:"fünfzehn", explain:"'...um neun Uhr fünfzehn ab.'"},
+ {sentence:"Ich verbinde Sie kurz mit der richtigen Abteilung.", type:"mc", prompt:"Was macht die Person am Telefon?", options:["verbinden","auflegen","anrufen"], answer:"verbinden", explain:"'Ich verbinde Sie kurz mit der richtigen Abteilung.'"}
+];
+
+const schreibenTasks = [
+ {prompt:"اكتب جملة بصيغة الـ Perfekt عن شيء طبخته أو أكلته.", model:"Ich habe gestern Nudeln gekocht."},
+ {prompt:"استخدم 'weil' لتفسير سبب إعجابك بمطعم.", model:"Ich mag dieses Restaurant, weil das Essen lecker ist."},
+ {prompt:"اكتب جملة تستخدم فيها صيغة الملكية Genitiv (Name+s).", model:"Das ist Annas Buch."},
+ {prompt:"صِف نشاطاً قمت به الأسبوع الماضي باستخدام Perfekt.", model:"Ich habe meine Familie besucht."},
+ {prompt:"اكتب سؤالاً بصيغة الماضي البسيط لفعل شرطي (Modalverb Präteritum).", model:"Musstest du früher viel lernen?"},
+ {prompt:"اكتب جملة تصف فيها شخصاً باستخدام ضمير ملكية في حالة Dativ.", model:"Ich spreche mit meinem Lehrer."},
+ {prompt:"قارن بين شيئين باستخدام صيغة المقارنة (Komparativ).", model:"Der Zug ist schneller als der Bus."},
+ {prompt:"اكتب جملة تستخدم فيها صيغة التفضيل (Superlativ).", model:"Das ist das beste Restaurant der Stadt."},
+ {prompt:"استخدم 'dass' للتعبير عن رأيك حول فيلم.", model:"Ich finde, dass der Film sehr spannend ist."},
+ {prompt:"اكتب جملة شرط باستخدام 'wenn'.", model:"Wenn ich Zeit habe, gehe ich spazieren."},
+ {prompt:"اكتب جملة تستخدم فيها فعلاً انعكاسياً (reflexives Verb).", model:"Ich freue mich auf das Wochenende."},
+ {prompt:"هنّئ صديقاً بمناسبة سعيدة باستخدام عبارة مناسبة.", model:"Herzlichen Glückwunsch zum Geburtstag!"},
+ {prompt:"اكتب طلباً مهذباً باستخدام Konjunktiv II (könnte).", model:"Könnten Sie mir bitte helfen?"},
+ {prompt:"اكتب جملة تصف فيها شخصاً باستخدام صفة بعد أداة تعريف (der/die/das).", model:"Die freundliche Frau arbeitet bei der Bank."},
+ {prompt:"استخدم حرف الجر 'ohne' مع حالة Akkusativ في جملة.", model:"Ohne meinen Ausweis darf ich nicht rein."},
+ {prompt:"استخدم حرف الجر 'mit' مع حالة Dativ في جملة.", model:"Ich fahre mit dem Bus zur Arbeit."},
+ {prompt:"اكتب جملة تستخدم فيها الفعل 'werden' بمعنى 'يصبح'.", model:"Ich möchte Lehrer werden."},
+ {prompt:"اكتب جملة تصف فيها شيئاً باستخدام صفة بعد أداة تنكير (ein/eine).", model:"Das ist ein interessantes Buch."},
+ {prompt:"صف مكالمة هاتفية بجملتين بسيطتين.", model:"Ich rufe die Firma an. Ich stelle mich vor."},
+ {prompt:"اكتب جملة عن مكانك المفضّل للسفر باستخدام Perfekt.", model:"Ich bin letztes Jahr nach Wien gefahren."},
+ {prompt:"اكتب نصيحة قصيرة لصديق يشعر بالتوتر.", model:"Du solltest dich entspannen."},
+ {prompt:"صف وجبة طعام تفضّلها باستخدام صفات اللون أو الطعم.", model:"Die Suppe ist warm und lecker."},
+ {prompt:"اكتب جملة عن مدرستك القديمة باستخدام الماضي.", model:"Ich war früher auf einer Realschule."},
+ {prompt:"عبّر عن أمل تتمناه للمستقبل.", model:"Ich hoffe, dass ich bald eine neue Stelle finde."},
+ {prompt:"اكتب ملخّصاً من جملتين عمّا تعلمته في هذه الفصول الستة.", model:"Ich habe viel über das Leben in einer WG gelernt. Das war sehr interessant."}
+];
+
+const sprechenTasks = [
+ {prompt:"قدّم نفسك خلال دقيقة: اسمك، عمرك، ومن أين أنت.", hint:"Ich heiße ... / Ich bin ... Jahre alt / Ich komme aus ..."},
+ {prompt:"صف يومك العادي باستخدام أفعال في صيغة الـ Perfekt.", hint:"Ich bin aufgestanden. Ich habe ... gemacht."},
+ {prompt:"تحدّث عن مطعمك المفضّل ولماذا تحبه.", hint:"Ich mag ..., weil ..."},
+ {prompt:"صف صديقاً أو أحد أفراد عائلتك.", hint:"Er/Sie heißt ... / Er/Sie ist ..."},
+ {prompt:"تحدّث عن ذكرى من مدرستك.", hint:"In der Schule habe ich ..."},
+ {prompt:"صف فيلماً أو مسلسلاً شاهدته مؤخراً.", hint:"Ich habe ... gesehen. Es war ..."},
+ {prompt:"عبّر عن رأيك في وسائل التواصل الاجتماعي.", hint:"Ich finde, dass ..."},
+ {prompt:"تحدّث عن شعورك اليوم ولماذا تشعر بذلك.", hint:"Ich bin ..., weil ..."},
+ {prompt:"هنّئ صديقاً خيالياً بمناسبة سعيدة بصوت عالٍ.", hint:"Herzlichen Glückwunsch zu ...!"},
+ {prompt:"صف مدينتك المفضّلة بجملتين أو ثلاث.", hint:"Meine Lieblingsstadt ist ..."},
+ {prompt:"اطلب من شخص مساعدة بأسلوب مهذّب مستخدماً könnte.", hint:"Könnten Sie mir bitte ...?"},
+ {prompt:"تحدّث عن حلمك المهني (Traumberuf).", hint:"Mein Traumberuf ist ..., weil ..."},
+ {prompt:"صف مقابلة عمل تخيّلتها.", hint:"In dem Gespräch hat man mich gefragt, ob ..."},
+ {prompt:"اشرح كيف تفتح حساباً بنكياً بجملتين.", hint:"Zuerst ... Dann ..."},
+ {prompt:"صف رحلة بالقطار قمت بها أو تتخيّلها.", hint:"Ich bin mit dem Zug nach ... gefahren."},
+ {prompt:"تحدّث عن هواية تحب ممارستها في وقت فراغك.", hint:"In meiner Freizeit ..."},
+ {prompt:"أجرِ محادثة هاتفية قصيرة متخيّلة (قدّم نفسك واطلب معلومة).", hint:"Guten Tag, mein Name ist ..."},
+ {prompt:"صف طبقاً تحب طبخه أو تناوله.", hint:"Mein Lieblingsgericht ist ..."},
+ {prompt:"تحدّث عن نصيحة أعطيتها أو تلقّيتها مؤخراً.", hint:"Ich habe/Man hat mir geraten, dass ..."},
+ {prompt:"صف مكاناً تشعر فيه بالراحة والاسترخاء.", hint:"Dort fühle ich mich ..., weil ..."},
+ {prompt:"قارن بين مدينتين أو مكانين باستخدام صيغة المقارنة.", hint:"... ist größer/schöner als ..."},
+ {prompt:"تحدّث عمّا تفعله عندما تشعر بالتوتر.", hint:"Wenn ich gestresst bin, ..."},
+ {prompt:"صف شخصية من مسلسل أو فيلم تحبها.", hint:"Meine Lieblingsfigur ist ..., weil ..."},
+ {prompt:"تحدّث عن أهم شيء تعلمته في هذه الدورة حتى الآن.", hint:"Ich habe gelernt, dass ..."},
+ {prompt:"اختم بجملة تلخّص شعورك تجاه تعلّم اللغة الألمانية حتى الآن.", hint:"Deutsch zu lernen ist für mich ..."}
+];
+
+/* =========================================================
+   ENGINE (shared logic — timer, TTS, quiz grading, recorder)
+   ========================================================= */
+let secondsLeft = EXAM_DURATION_MIN * 60;
+let timerInterval = null;
+let examFinished = false;
+let startTimestamp = null;
+
+function formatMMSS(totalSeconds){
+  const m = Math.floor(totalSeconds/60);
+  const s = totalSeconds%60;
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function startTimer(){
+  startTimestamp = Date.now();
+  timerInterval = setInterval(()=>{
+    secondsLeft--;
+    document.getElementById('timerDisplay').textContent = formatMMSS(Math.max(secondsLeft,0));
+    if(secondsLeft <= 300) document.getElementById('timerDisplay').classList.add('warn');
+    if(secondsLeft <= 0){
+      clearInterval(timerInterval);
+      finishExam('timeup');
+    }
+  }, 1000);
+}
+
+/* =========================================================
+   FOCUS-LOCK — forces the student to stay on the exam page.
+   Uses the Page Visibility API (not window blur/focus, which also
+   fires for harmless things like the mic-permission prompt or our
+   own confirm() dialog and would cause false positives). Every time
+   the student switches tabs / minimizes / leaves the page during an
+   active exam, a warning shows the exact time they were away; after
+   3 such violations the exam auto-submits with the answers as they are.
+   ========================================================= */
+const MAX_VIOLATIONS = 3;
+let violationCount = 0;
+let isAway = false;
+let awayStartTime = null;
+
+function handleLeftPage(){
+  if(isAway || !examStarted || examFinished) return;
+  isAway = true;
+  awayStartTime = Date.now();
+}
+function handleReturnedToPage(){
+  if(!isAway) return;
+  isAway = false;
+  if(!examStarted || examFinished){ awayStartTime = null; return; }
+  const awaySeconds = Math.max(1, Math.round((Date.now() - awayStartTime) / 1000));
+  awayStartTime = null;
+  violationCount++;
+  showViolationModal(awaySeconds, violationCount);
+}
+document.addEventListener('visibilitychange', ()=>{
+  if(document.hidden) handleLeftPage();
+  else handleReturnedToPage();
+});
+
+function showViolationModal(awaySeconds, count){
+  document.getElementById('violationBody').innerHTML =
+    `لقد غادرت صفحة الامتحان لمدة <b>${awaySeconds}</b> ثانية.`;
+  document.getElementById('violationTitle').dataset.defaultTitle = 'تحذير: مغادرة صفحة الامتحان';
+  showViolationModalCommon(count, 'تحذير: مغادرة صفحة الامتحان');
+}
+
+/* ---- generic capture / shortcut violation (screenshots, devtools, save, print) ---- */
+function triggerCaptureViolation(message){
+  if(!examStarted || examFinished) return;
+  violationCount++;
+  document.getElementById('violationBody').innerHTML = message;
+  showViolationModalCommon(violationCount, 'تحذير: محاولة التقاط/مشاركة الشاشة');
+}
+
+function showViolationModalCommon(count, defaultTitle){
+  document.getElementById('violationCountLabel').textContent = `تحذير ${count} من ${MAX_VIOLATIONS}`;
+  const finalNote = document.getElementById('violationFinalNote');
+  const isLast = count >= MAX_VIOLATIONS;
+  finalNote.style.display = isLast ? 'block' : 'none';
+  document.getElementById('violationTitle').textContent = isLast
+    ? 'تم تجاوز الحد المسموح — سيُنهى الامتحان الآن'
+    : defaultTitle;
+  document.getElementById('violationOverlay').classList.add('show');
+  if(typeof window.speechSynthesis !== 'undefined') window.speechSynthesis.cancel();
+  const closeBtn = document.getElementById('violationCloseBtn');
+  closeBtn.textContent = isLast ? 'عرض النتيجة النهائية' : 'فهمت، متابعة الامتحان';
+  closeBtn.onclick = ()=>{
+    document.getElementById('violationOverlay').classList.remove('show');
+    if(isLast) finishExam('violations');
+  };
+}
+
+/* ---- deter screenshots / screen-recording shortcuts & context menu ---- */
+document.addEventListener('contextmenu', (e)=>{
+  if(examStarted && !examFinished) e.preventDefault();
+});
+document.addEventListener('copy', (e)=>{
+  if(examStarted && !examFinished) e.preventDefault();
+});
+document.addEventListener('keydown', (e)=>{
+  if(!examStarted || examFinished) return;
+  const k = (e.key || '').toLowerCase();
+  const isSaveOrPrint = (e.ctrlKey || e.metaKey) && ['s','p','u'].includes(k);
+  const isDevtools = e.key === 'F12' || ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i','j','c'].includes(k));
+  if(isSaveOrPrint || isDevtools){
+    e.preventDefault();
+    triggerCaptureViolation('تم رصد محاولة استخدام اختصار غير مسموح به (حفظ الصفحة / طباعة / أدوات المطوّر) أثناء الامتحان. هذه المحاولة مسجَّلة.');
+  }
+});
+document.addEventListener('keyup', (e)=>{
+  if(!examStarted || examFinished) return;
+  if(e.key === 'PrintScreen'){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText('⚠️ التقاط الشاشة غير مسموح به في امتحان DOS Akademie.').catch(()=>{});
+    }
+    triggerCaptureViolation('تم رصد محاولة أخذ لقطة شاشة (PrintScreen). يُرجى العلم أن هذا الإجراء مسجَّل، وأن الصفحة تحمل علامة مائية باسمك.');
+  }
+});
+
+/* ---- simple, reliable German TTS (Web Speech API) ---- */
+let ttsVoice = null;
+function pickBestGermanVoice(){
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  const de = voices.filter(v=>v.lang.toLowerCase().startsWith('de'));
+  const scored = de.sort((a,b)=>{
+    const score = v => (/google|natural|neural|online/i.test(v.name) ? 1 : 0);
+    return score(b)-score(a);
+  });
+  ttsVoice = scored[0] || de[0] || voices[0] || null;
+}
+if('speechSynthesis' in window){
+  window.speechSynthesis.onvoiceschanged = pickBestGermanVoice;
+  pickBestGermanVoice();
+}
+function speak(text, btn){
+  if(!('speechSynthesis' in window)){ alert('متصفحك لا يدعم النطق الصوتي.'); return; }
+  window.speechSynthesis.cancel();
+  document.querySelectorAll('.spk.playing').forEach(b=>b.classList.remove('playing'));
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = ttsVoice ? ttsVoice.lang : 'de-DE';
+  if(ttsVoice) u.voice = ttsVoice;
+  u.rate = 0.95; u.pitch = 1.0; u.volume = 1.0; // slightly slower + full volume for maximum clarity
+  if(btn){
+    btn.classList.add('playing');
+    u.onend = ()=>btn.classList.remove('playing');
+    u.onerror = ()=>btn.classList.remove('playing');
+  }
+  window.speechSynthesis.speak(u);
+}
+function normalize(s){ return (s||'').toLowerCase().trim().replace(/[.,!?„“"']/g,'').replace(/\s+/g,' '); }
+
+/* ---- recorder (MediaRecorder) ---- */
+function recorderHTML(id){
+  return `<div class="recorder-box" data-rec-id="${id}">
+    <div class="rec-controls">
+      <button class="btn btn-red rec-start" type="button">🎙️ ابدأ التسجيل</button>
+      <button class="btn btn-ghost rec-stop" type="button" disabled>⏹️ إيقاف</button>
+    </div>
+    <div class="rec-status"></div>
+    <audio class="rec-audio" controls></audio>
+    <a class="rec-download btn btn-gold" download="sprechen-${id}.webm">⬇️ تحميل التسجيل</a>
+  </div>`;
+}
+function initRecorders(scope){
+  scope.querySelectorAll('.recorder-box').forEach(box=>{
+    if(box.dataset.init) return;
+    box.dataset.init='1';
+    const startBtn=box.querySelector('.rec-start'), stopBtn=box.querySelector('.rec-stop');
+    const status=box.querySelector('.rec-status'), audioEl=box.querySelector('.rec-audio'), dl=box.querySelector('.rec-download');
+    let mediaRecorder, chunks=[], stream, timerInt, seconds=0;
+    startBtn.onclick = async ()=>{
+      if(!navigator.mediaDevices || !window.MediaRecorder){ status.textContent='⚠️ متصفحك لا يدعم التسجيل.'; return; }
+      try{ stream = await navigator.mediaDevices.getUserMedia({audio:true}); }
+      catch(e){ status.textContent='⚠️ تعذّر الوصول إلى الميكروفون.'; return; }
+      chunks=[]; seconds=0;
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = e=>{ if(e.data.size>0) chunks.push(e.data); };
+      mediaRecorder.onstop = ()=>{
+        const blob = new Blob(chunks, {type:'audio/webm'});
+        const url = URL.createObjectURL(blob);
+        audioEl.src=url; audioEl.style.display='block';
+        dl.href=url; dl.style.display='inline-block';
+        stream.getTracks().forEach(t=>t.stop());
+        clearInterval(timerInt);
+      };
+      mediaRecorder.start();
+      startBtn.disabled=true; stopBtn.disabled=false;
+      status.classList.add('recording'); status.textContent='🔴 جارٍ التسجيل... 0:00';
+      timerInt=setInterval(()=>{ seconds++; status.textContent=`🔴 جارٍ التسجيل... ${formatMMSS(seconds)}`; },1000);
+    };
+    stopBtn.onclick = ()=>{
+      if(mediaRecorder && mediaRecorder.state!=='inactive') mediaRecorder.stop();
+      startBtn.disabled=false; stopBtn.disabled=true;
+      status.classList.remove('recording'); status.textContent='✅ تم التسجيل.';
+    };
+  });
+}
+
+/* ---- render Lesen ---- */
+const lesenQuiz = lesenQuizA.concat(lesenQuizB);
+const LESEN_SPLIT = lesenQuizA.length;
+let lesenAnswers = new Array(lesenQuiz.length).fill(null);
+
+function renderLesenQuizBlock(quizArr, offset, container){
+  container.innerHTML = quizArr.map((q,localI)=>{
+    const i = offset + localI;
+    const opts = q.type==='mc'
+      ? `<div class="q-options">${q.options.map(o=>`<div class="q-opt de" data-val="${o.replace(/"/g,'&quot;')}">${o}</div>`).join('')}</div>`
+      : `<input type="text" placeholder="اكتب إجابتك بالألمانية...">`;
+    return `<div class="q-card ${q.type==='fill'?'q-fill':''}" data-qi="${i}">
+      <div class="q-num">سؤال ${i+1} / ${lesenQuiz.length}</div>
+      <div class="q-prompt de">${q.prompt}</div>${opts}
+    </div>`;
+  }).join('');
+  container.querySelectorAll('.q-card').forEach(card=>{
+    const qi=parseInt(card.dataset.qi);
+    if(lesenQuiz[qi].type==='mc'){
+      card.querySelectorAll('.q-opt').forEach(opt=>opt.onclick=()=>{
+        card.querySelectorAll('.q-opt').forEach(o=>o.classList.remove('selected'));
+        opt.classList.add('selected'); lesenAnswers[qi]=opt.dataset.val; updateProg('lesen');
+      });
+    } else {
+      const input=card.querySelector('input');
+      input.oninput=()=>{ lesenAnswers[qi]=input.value.trim(); updateProg('lesen'); };
+    }
+  });
+}
+
+/* Lesen is a pure reading test — no audio here by design, so listening
+   comprehension (Hören) and reading comprehension (Lesen) stay clearly
+   separate skills, each graded on its own. */
+function renderLesen(){
+  const root = document.getElementById('lesenContent');
+  root.innerHTML = `
+    <div class="card">
+      <h3 style="margin:0 0 10px;font-size:15px;">📄 النص الأول — Die Netzwerk-WG</h3>
+      <p class="de" style="font-size:15px;line-height:1.9;">${lesenTextA.join(' ')}</p>
+    </div>
+    <div class="q-progress"><span id="lesenProgLabel">0 / ${lesenQuiz.length}</span><div class="bar"><div class="fill" id="lesenProgFill"></div></div></div>
+    <div id="lesenQuizA"></div>
+    <div class="card" style="margin-top:22px;">
+      <h3 style="margin:0 0 10px;font-size:15px;">📄 النص الثاني — Gefühle, ein neuer Job und ein neues Talent</h3>
+      <p class="de" style="font-size:15px;line-height:1.9;">${lesenTextB.join(' ')}</p>
+    </div>
+    <div id="lesenQuizB"></div>
+  `;
+  renderLesenQuizBlock(lesenQuizA, 0, document.getElementById('lesenQuizA'));
+  renderLesenQuizBlock(lesenQuizB, LESEN_SPLIT, document.getElementById('lesenQuizB'));
+  updateProg('lesen');
+}
+
+/* ---- render Hören ---- */
+let hoerenAnswers = new Array(hoerenQuiz.length).fill(null);
+function renderHoeren(){
+  const c = document.getElementById('hoerenQuizContainer');
+  c.innerHTML = hoerenQuiz.map((q,i)=>{
+    const opts = q.type==='mc'
+      ? `<div class="q-options">${q.options.map(o=>`<div class="q-opt de" data-val="${o.replace(/"/g,'&quot;')}">${o}</div>`).join('')}</div>`
+      : `<input type="text" placeholder="اكتب إجابتك بالألمانية...">`;
+    return `<div class="q-card ${q.type==='fill'?'q-fill':''}" data-qi="${i}">
+      <div class="q-num">سؤال ${i+1} / ${hoerenQuiz.length}</div>
+      <button class="btn btn-ghost" style="margin-bottom:8px;" data-hp="${i}">🔊 استمع إلى الجملة</button>
+      <div class="q-prompt de">${q.prompt}</div>${opts}
+    </div>`;
+  }).join('');
+  c.querySelectorAll('[data-hp]').forEach(b=>b.onclick=()=>speak(hoerenQuiz[parseInt(b.dataset.hp)].sentence,b));
+  c.querySelectorAll('.q-card').forEach(card=>{
+    const qi=parseInt(card.dataset.qi);
+    if(hoerenQuiz[qi].type==='mc'){
+      card.querySelectorAll('.q-opt').forEach(opt=>opt.onclick=()=>{
+        card.querySelectorAll('.q-opt').forEach(o=>o.classList.remove('selected'));
+        opt.classList.add('selected'); hoerenAnswers[qi]=opt.dataset.val; updateProg('hoeren');
+      });
+    } else {
+      const input=card.querySelector('input');
+      input.oninput=()=>{ hoerenAnswers[qi]=input.value.trim(); updateProg('hoeren'); };
+    }
+  });
+  updateProg('hoeren');
+}
+function updateProg(which){
+  const arr = which==='lesen'?lesenAnswers:hoerenAnswers;
+  const total = which==='lesen'?lesenQuiz.length:hoerenQuiz.length;
+  const answered = arr.filter(a=>a && a.length>0).length;
+  document.getElementById(which+'ProgLabel').textContent = `${answered} / ${total}`;
+  document.getElementById(which+'ProgFill').style.width = (answered/total*100)+'%';
+}
+
+/* ---- render Schreiben / Sprechen ---- */
+function renderSchreiben(){
+  const c = document.getElementById('schreibenContainer');
+  c.innerHTML = schreibenTasks.map((t,i)=>`
+    <div class="q-card">
+      <div class="q-num">تمرين ${i+1} / ${schreibenTasks.length}</div>
+      <div class="q-prompt">${t.prompt}</div>
+      <textarea class="q-write" data-si="${i}" rows="3" placeholder="Schreib hier auf Deutsch..."></textarea>
+    </div>`).join('');
+}
+function renderSprechen(){
+  const c = document.getElementById('sprechenContainer');
+  c.innerHTML = sprechenTasks.map((t,i)=>`
+    <div class="q-card">
+      <div class="q-num">سؤال ${i+1} / ${sprechenTasks.length}</div>
+      <div class="q-prompt">${t.prompt}</div>
+      <div class="hint-box de">💡 ${t.hint}</div>
+      ${recorderHTML('t'+i)}
+    </div>`).join('');
+  initRecorders(c);
+}
+
+/* ---- tabs ---- */
+const tabDefs = [
+ {id:'lesen', label:'📖 Lesen'},
+ {id:'hoeren', label:'🎧 Hören'},
+ {id:'schreiben', label:'✍️ Schreiben'},
+ {id:'sprechen', label:'🎙️ Sprechen'}
+];
+function renderTabs(){
+  const c = document.getElementById('examTabs');
+  c.innerHTML = tabDefs.map((t,i)=>`<button class="tab-btn ${i===0?'active':''}" data-target="sec-${t.id}">${t.label}</button>`).join('');
+  c.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.onclick=()=>{
+      c.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.exam-section').forEach(s=>s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.target).classList.add('active');
+      window.speechSynthesis.cancel();
+    };
+  });
+}
+
+/* ---- start / finish ---- */
+let examStarted = false;
+const NAME_REGEX = /^[A-Za-z]+(?:[ \-][A-Za-z]+){2,}$/;
+document.getElementById('startBtn').onclick = ()=>{
+  const name = document.getElementById('studentName').value.trim();
+  if(!name){ alert('الرجاء كتابة اسمك أولاً.'); return; }
+  if(!NAME_REGEX.test(name)){
+    alert('الرجاء كتابة الاسم الثلاثي بأحرف إنجليزية فقط (مثال: Ahmad Mohammed Ali).');
+    return;
+  }
+  document.getElementById('topName').textContent = name;
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('examScreen').style.display='block';
+  renderTabs(); renderLesen(); renderHoeren(); renderSchreiben(); renderSprechen();
+  document.getElementById('sec-lesen').classList.add('active');
+  startTimer();
+  examStarted = true;
+  document.getElementById('lockBanner').classList.add('show');
+  buildWatermark(name);
+  document.getElementById('examWatermark').classList.add('show');
+  window.onbeforeunload = ()=> !examFinished ? 'الامتحان لا يزال جارياً. هل تريد المغادرة؟' : undefined;
+};
+
+function buildWatermark(name){
+  const wm = document.getElementById('examWatermark');
+  const stamp = new Date().toLocaleString('ar-EG');
+  const text = `${name} · DOS Akademie · ${stamp}`;
+  let items = '';
+  for(let i=0;i<24;i++){ items += `<span class="wm-item">${text}</span>`; }
+  wm.innerHTML = items;
+}
+document.getElementById('finishBtn').onclick = ()=>{
+  if(confirm('هل أنت متأكد من إنهاء الامتحان؟ لا يمكن التراجع بعد ذلك.')) finishExam('manual');
+};
+function finishExam(reason){
+  if(examFinished) return;
+  examFinished = true;
+  clearInterval(timerInterval);
+  window.speechSynthesis.cancel();
+  window.onbeforeunload = null;
+  document.getElementById('lockBanner').classList.remove('show');
+  document.getElementById('violationOverlay').classList.remove('show');
+  const elapsed = Math.round((Date.now()-startTimestamp)/1000);
+
+  let lesenScore=0, hoerenScore=0;
+  const reviewParts = [];
+  lesenQuiz.forEach((q,i)=>{
+    const ok = normalize(lesenAnswers[i])===normalize(q.answer);
+    if(ok) lesenScore++;
+    reviewParts.push(`<div class="q-card"><div class="q-num">Lesen ${i+1}</div><div class="q-prompt de">${q.prompt}</div>
+      <div style="font-size:13px;">${ok?'✅ صحيح':'❌ غير صحيح'} — الإجابة الصحيحة: <span class="de">${q.answer}</span><br><span style="color:var(--muted);">${q.explain}</span></div></div>`);
+  });
+  hoerenQuiz.forEach((q,i)=>{
+    const ok = normalize(hoerenAnswers[i])===normalize(q.answer);
+    if(ok) hoerenScore++;
+    reviewParts.push(`<div class="q-card"><div class="q-num">Hören ${i+1}</div><div class="q-prompt de">${q.prompt}</div>
+      <div style="font-size:13px;">${ok?'✅ صحيح':'❌ غير صحيح'} — الإجابة الصحيحة: <span class="de">${q.answer}</span><br><span style="color:var(--muted);">${q.explain}</span></div></div>`);
+  });
+  const total = lesenQuiz.length + hoerenQuiz.length;
+  const score = lesenScore + hoerenScore;
+  const pct = Math.round(score/total*100);
+
+  document.getElementById('examScreen').style.display='none';
+  document.getElementById('resultsScreen').style.display='block';
+  document.getElementById('resultBigScore').textContent = `${score} / ${total}`;
+  const summaryByReason = {
+    timeup: `انتهى الوقت المخصّص (90 دقيقة) — تم احتساب النتيجة تلقائياً بناءً على الإجابات المُدخَلة.`,
+    manual: `أنهى الطالب/ة الامتحان قبل انتهاء الوقت المخصّص.`,
+    violations: `⚠️ تم إنهاء الامتحان تلقائياً بسبب مغادرة صفحة الامتحان 3 مرات (خرق لقواعد وضع الامتحان المقفل). تم احتساب النتيجة بناءً على الإجابات المُدخَلة حتى لحظة الإنهاء.`
+  };
+  document.getElementById('resultSummaryText').textContent = summaryByReason[reason] || summaryByReason.manual;
+  document.getElementById('statLesen').textContent = `${lesenScore}/${lesenQuiz.length}`;
+  document.getElementById('statHoeren').textContent = `${hoerenScore}/${hoerenQuiz.length}`;
+  document.getElementById('statTime').textContent = formatMMSS(elapsed);
+  document.getElementById('statPct').textContent = pct+'%';
+  document.getElementById('detailedReview').innerHTML = reviewParts.join('');
+}
+
+document.getElementById('exportWritingBtn').onclick = ()=>{
+  const name = document.getElementById('topName').textContent;
+  let text = `DOS Akademie — امتحان Kapitel 1-6\r\nالطالب/ة: ${name}\r\nالتاريخ: ${new Date().toLocaleString('ar-EG')}\r\n\r\n=== Schreiben ===\r\n\r\n`;
+  document.querySelectorAll('.q-write').forEach((ta,i)=>{
+    text += `تمرين ${i+1}: ${schreibenTasks[i].prompt}\r\nالإجابة: ${ta.value || '(فارغ)'}\r\n\r\n`;
+  });
+  const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=`schreiben-${name||'student'}.txt`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 3000);
+};
+document.getElementById('printResultsBtn').onclick = ()=>window.print();
+</script>
+</body>
+</html>
